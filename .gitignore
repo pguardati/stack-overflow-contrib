@@ -1,2 +1,4 @@
 /.idea/
 /old_contributions/
+/neuron_spike_simulation/logs/
+/neuron_spike_simulation/notebooks/

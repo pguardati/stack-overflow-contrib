@@ -1,0 +1,9 @@
+name: neuron_spike_simulation
+channels:
+  - defaults
+dependencies:
+  - scipy
+  - pandas
+  - python==3.7
+  - tqdm
+  - matplotlib
