@@ -92,7 +92,7 @@ def simulate_spike_dynamics(
     h[:, 0] = h0
     n[:, 0] = n0
     # Noise component
-    knoise = 0.0005  # uA/(mS)^1/2
+    knoise = 0.00005  # uA/(mS)^1/2
 
     for i in range(0, int(t_steps) - 1, 1):
         # Get current states

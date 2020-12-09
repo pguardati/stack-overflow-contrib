@@ -11,6 +11,7 @@ from matplotlib import rc
 
 from neuron_spike_simulation.src.models import HH_model
 from neuron_spike_simulation.src.constants import LOG_DIR
+
 rc('text', usetex=True)
 
 
@@ -38,8 +39,18 @@ def plot_spikes_vs_surfaces_and_stimuli(df):
 
 def run(args):
     print("Create grid of parameters..")
-    voltage_interval = np.logspace(start=-11, stop=-6, num=args.voltage_points, base=10)
-    area_interval = np.logspace(start=-1, stop=1, num=args.area_points, base=10)
+    voltage_interval = np.logspace(
+        start=args.voltage_exp_start,
+        stop=args.voltage_exp_end,
+        num=args.voltage_points,
+        base=10
+    )
+    area_interval = np.logspace(
+        start=args.area_exp_start,
+        stop=args.area_exp_end,
+        num=args.area_points,
+        base=10
+    )
     param_combination = list(itertools.product(*[area_interval, voltage_interval]))
 
     print("Evaluate simulation on {} combinations of input stimulus and surface area..".format(len(param_combination)))
@@ -82,7 +93,17 @@ def parse_ars(args):
     parser = argparse.ArgumentParser(
         description="Run spike simulations for a grid of values of voltage stimulus and surface of a neuron")
     parser.add_argument("--voltage-points", default=10, type=int, help="number of voltage values to explore")
-    parser.add_argument("--area-points", default=3, type=int, help="number of area values to explore")
+    parser.add_argument("--voltage-exp-start", default=-8, type=float,
+                        help="order of magnitude of the minimum value of the voltage grid")
+    parser.add_argument("--voltage-exp-end", default=-7, type=float,
+                        help="order of magnitude of the maximum value of the voltage grid")
+
+    parser.add_argument("--area-points", default=1, type=int, help="number of area values to explore")
+    parser.add_argument("--area-exp-start", default=-1, type=float,
+                        help="order of magnitude of the minimum value of the area grid")
+    parser.add_argument("--area-exp-end", default=-1, type=float,
+                        help="order of magnitude of the maximum value of the area grid")
+
     parser.add_argument("--runs", default=10, type=int,
                         help="number of time each simulation is run to predict one output")
     parser.add_argument("--t-end", default=2, type=float, help="time when the simulation ends (ms)")
@@ -99,4 +120,13 @@ def main(args=None):
 
 
 if __name__ == "__main__":
-    main(["--voltage-points=10", "--area-points=3", "--store-results", "--store-plots"])
+    main([
+        "--voltage-points=100",
+        "--voltage-exp-star=-7.5",
+        "--voltage-exp-end=-6.5",
+        "--area-points=1",
+        "--area-exp-start=-1",
+        "--area-exp-end=-1",
+        "--store-results",
+        "--store-plots"
+    ])
