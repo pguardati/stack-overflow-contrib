@@ -72,3 +72,6 @@ Possible issues:
 
 TODO:  
 - add k_noise as a parameter in the grid search
+- add tqdm in gread search
+- add usage of multiplicative input for parameter optimization
+- make optimization to converge starting from v=1e-7, a=0.1 and current k_noise
