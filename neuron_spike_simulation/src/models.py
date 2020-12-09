@@ -148,7 +148,7 @@ def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_
         runs(int): number of times each simulation is executed
         t_end(int): end time of the simulation (s)
         v_ref(float): amplitude of the stimulus used to excite the neuron (V)
-        area_ref(float): contact surface between electrode and the neuron (cm^2)
+        area_ref(float): surface area of the neuron (cm^2)
 
     Returns:
         float: percentage of neuron spikes respect to the total runs

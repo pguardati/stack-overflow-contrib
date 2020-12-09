@@ -10,7 +10,7 @@ it has then been augmented to answer the question.
 The framework contains:
 - an implementation of the HH model     
 - a script to compute and plot the predictions of 
-how many spikes a neuron does, as function of the input stimulus and the surface area of an electrode
+how many spikes a neuron does, as function of the input stimulus and the surface area of the neuron 
 - a script to search the values of the input stimulus and the surfaces area that 
 makes the model to fit the experimental data
 

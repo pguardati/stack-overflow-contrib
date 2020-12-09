@@ -35,7 +35,7 @@ def parse_args(args=None):
     parser.add_argument("--delta-v", default=0, type=float,
                         help="normalised displacement respect to maximum applicable voltage")
     parser.add_argument("--delta-area", default=0, type=float,
-                        help="surface of contact between the input electrode and the neuron")
+                        help="surface area of the neuron")
     parser.add_argument("--runs", default=100, type=int,
                         help="number of time each simulation is run to predict one output")
     parser.add_argument("--t-end", default=2, type=float, help="time when the simulation ends (ms)")
