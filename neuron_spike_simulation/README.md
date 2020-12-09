@@ -69,3 +69,6 @@ Possible issues:
 - Optimizer settings
 - Sensitivity of the loss respect to the variation of the parameters
 - The simulation has been treated as a black box, the equations might be incorrect 
+
+TODO:  
+- add k_noise as a parameter in the grid search
