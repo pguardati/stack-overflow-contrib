@@ -51,7 +51,26 @@ def betaN(v):
     return 12 * (0.125 * np.exp(-(v) / 80))
 
 
-def simulate_spike_dynamics(area_factor, stimulus, delay=0.1, dt=0.0025, duration=0.1, t_end=10):
+def simulate_spike_dynamics(
+        area_factor,
+        stimulus,
+        delay=0.1,
+        dt=0.0025,
+        duration=0.1,
+        t_end=10
+):
+    """Step response of a neuron excited by an electrical signal
+    Args:
+        area_factor(float): multiplicative factor that determines the surface of the simulated neuron
+        stimulus(float): amplitude of the input signal (volt)
+        delay(float): delay of the input signal (s)
+        dt(float): integration step (s)
+        duration(float): total duration of the input (s)
+        t_end(float): end of the simulation (s)
+
+    Returns:
+
+    """
     A = (1 * 10 ** (-8)) * area_factor  # surface [cm^2]
     C = c * A  # uF
 
@@ -113,19 +132,22 @@ def simulate_spike_dynamics(area_factor, stimulus, delay=0.1, dt=0.0025, duratio
 
 
 def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10):
+    """Predict how many simulations predicted at least one spike
+    Args:
+        area_factor(float): multiplicative factor that determines the surface of the simulated neuron
+        stimulus(float): amplitude of the input signal (volt)
+        runs(int): number of simulations
+        return_seq(bool): if True, return the simulations that have been used to compute the spikes
+        t_end(float): end of the simulation (s)
+
+    Returns:
+        int|tuple=[int,np.array]
+    """
     count = 0
     delay = 0.1  # in ms
     duration = 0.1  # in ms
     dt = 0.0025  # in ms
     area_factor = area_factor
-
-    # geometry
-    d = 2  # diameter in um
-    r = d / 2  # Radius in um
-    l = 10  # Length of the compartment in  um
-    A = (1 * 10 ** (-8)) * area_factor  # surface [cm^2]
-    stimulus = stimulus
-    C = c * A  # uF
 
     simulations = []
     for _ in tqdm(range(0, runs), total=runs):
