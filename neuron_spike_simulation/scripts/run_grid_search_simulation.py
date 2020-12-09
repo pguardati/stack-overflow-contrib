@@ -10,9 +10,8 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 
 from neuron_spike_simulation.src.models import HH_model
-
+from neuron_spike_simulation.src.constants import LOG_DIR
 rc('text', usetex=True)
-log_path = os.path.join('..', 'logs')
 
 
 def plot_spikes_vs_surfaces_and_stimuli(df):
@@ -65,16 +64,16 @@ def run(args):
     df_sim["sequence"] = sequence_flatten
 
     if args.store_results:
-        path_summary = os.path.join(log_path, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + 'df_summary.csv')
-        path_sim = os.path.join(log_path, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + 'df_sim.csv')
-        os.makedirs(log_path, exist_ok=True)
+        path_summary = os.path.join(LOG_DIR, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + 'df_summary.csv')
+        path_sim = os.path.join(LOG_DIR, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + 'df_sim.csv')
+        os.makedirs(LOG_DIR, exist_ok=True)
         print("Store summary in {} and full simulation in {}".format(path_summary, path_sim))
         df_summary.to_csv(path_summary, index=False)
         df_sim.to_csv(path_sim, index=False)
 
     if args.store_plots:
         fig = plot_spikes_vs_surfaces_and_stimuli(df_summary)
-        path_fig = os.path.join(log_path, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + 'plot.png')
+        path_fig = os.path.join(LOG_DIR, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + 'plot.png')
         print("Store plot in {}".format(path_fig))
         fig.savefig(path_fig)
 

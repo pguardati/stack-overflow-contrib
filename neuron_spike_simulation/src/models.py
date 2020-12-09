@@ -5,12 +5,12 @@ import numpy as np
 from tqdm import tqdm
 from datetime import datetime as dt
 
+from neuron_spike_simulation.src.constants import LOG_DIR
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-dirlog = os.path.join('..', 'logs')
-os.makedirs(dirlog, exist_ok=True)
 fh = logging.FileHandler(
-    os.path.join(dirlog, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + '_value.log')
+    os.path.join(LOG_DIR, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + '_value.log')
 )
 fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
