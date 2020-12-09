@@ -36,14 +36,18 @@ conda activate neuron_spike_simulation
 
 
 ## Usage
-to search the values that generate a model that fits the experimental data, run:
+To search the values that generate a model that fits the experimental data, run:
 ```
 python neuron_spike_simulation/script/optimise_parameters.py
 ```
-to predict the response of a neuron given a percentage variation
+To predict the response of a neuron given a percentage variation
 of the parameters (voltage and area), run:
 ```
 python neuron_spike_simulation/script/predict_and_plot.py --delta-v=0 --delta-area=0 --runs=10
+```
+Run spike simulations for a grid of values of voltage stimulus and of surface of a neuron
+```
+python neuron_spike_simulation/script/run_grid_search_simulation.py --voltage-points=10 --area-points=3 --store-results --store-plots
 ```
 
 ## Tests
