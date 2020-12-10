@@ -47,7 +47,7 @@ python neuron_spike_simulation/script/predict_and_plot.py --delta-v=0 --delta-ar
 ```
 Run spike simulations for a grid of values of voltage stimulus and of surface of a neuron
 ```
-python neuron_spike_simulation/script/run_grid_search_simulation.py --voltage-points=10 --area-points=3 --store-results --store-plots
+python neuron_spike_simulation/script/run_grid_search_simulation.py --voltage-points=10 --area-points=3 --k-noise-points=3 --store-results --store-plots
 ```
 
 ## Tests
@@ -71,8 +71,6 @@ Possible issues:
 - The simulation has been treated as a black box, the equations might be incorrect 
 
 TODO:  
-- refactor knoise name
-
 - add usage of multiplicative input for parameter optimization
 - add usage of decibel input
 - make optimization to converge starting from v=1e-7, a=0.1 and current k_noise
