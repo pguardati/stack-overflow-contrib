@@ -46,7 +46,7 @@ class TestEquations(unittest.TestCase):
             runs=10,
             t_end=2,
             v_ref=1e-7,
-            area_ref=1
+            area_ref=0.1
         )
         self.assertTrue(counts > 0)
 

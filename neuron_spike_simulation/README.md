@@ -72,6 +72,9 @@ Possible issues:
 
 TODO:  
 - add k_noise as a parameter in the grid search
-- add tqdm in gread search
+- add tqdm in grid search
 - add usage of multiplicative input for parameter optimization
+- add usage of decibel input
 - make optimization to converge starting from v=1e-7, a=0.1 and current k_noise
+- use scipy.optimize.least_squares?
+- automatically find votlage,area such that p(spike)=0.5 + swipe around that

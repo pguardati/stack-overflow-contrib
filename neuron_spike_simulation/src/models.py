@@ -161,7 +161,7 @@ def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10):
     return count
 
 
-def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_end=2, v_ref=1e-7, area_ref=1):
+def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_end=2, v_ref=1e-7, area_ref=0.1):
     """HH model with normalised input and parameters
     Args:
         percentage_of_stimulus(float): percentage of the reference stimulus given to the neuron
@@ -175,7 +175,7 @@ def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_
     Returns:
         float: percentage of neuron spikes respect to the total runs
     """
-    stimulus = v_ref * (1 + delta_v) * percentage_of_stimulus
+    stimulus = v_ref * percentage_of_stimulus * (1 + delta_v)
     area_factor = area_ref * (1 + delta_area)
     y_counts = HH_model(area_factor, stimulus, runs=runs, t_end=t_end)
     normalized_count = y_counts / runs
