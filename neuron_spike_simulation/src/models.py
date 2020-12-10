@@ -57,7 +57,8 @@ def simulate_spike_dynamics(
         delay=0.1,
         dt=0.0025,
         duration=0.1,
-        t_end=10
+        t_end=10,
+        knoise=0.00005
 ):
     """Step response of a neuron excited by an electrical signal
     Args:
@@ -67,6 +68,7 @@ def simulate_spike_dynamics(
         dt(float): integration step (s)
         duration(float): total duration of the input (s)
         t_end(float): end of the simulation (s)
+        knoise(float): multiplicative constant of noise current amplitude(uA/(mS)^1/2)
 
     Returns:
 
@@ -91,8 +93,6 @@ def simulate_spike_dynamics(
     m[:, 0] = m0
     h[:, 0] = h0
     n[:, 0] = n0
-    # Noise component
-    knoise = 0.00005  # uA/(mS)^1/2
 
     for i in range(0, int(t_steps) - 1, 1):
         # Get current states
@@ -131,7 +131,7 @@ def simulate_spike_dynamics(
     return v
 
 
-def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10):
+def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10, knoise=0.00005):
     """Predict how many simulations predicted at least one spike
     Args:
         area_factor(float): multiplicative factor that determines the surface of the simulated neuron
@@ -139,6 +139,7 @@ def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10):
         runs(int): number of simulations
         return_seq(bool): if True, return the simulations that have been used to compute the spikes
         t_end(float): end of the simulation (s)
+        knoise(float): multiplicative constant of noise current amplitude(uA/(mS)^1/2)
 
     Returns:
         int|tuple=[int,np.array]
@@ -147,11 +148,10 @@ def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10):
     delay = 0.1  # in ms
     duration = 0.1  # in ms
     dt = 0.0025  # in ms
-    area_factor = area_factor
 
     simulations = []
     for _ in tqdm(range(0, runs), total=runs):
-        v = simulate_spike_dynamics(area_factor, stimulus, delay, dt, duration, t_end)
+        v = simulate_spike_dynamics(area_factor, stimulus, delay, dt, duration, t_end, knoise)
         simulations.append(v)
         if max(v[:] - v_Rest) > 60:
             count += 1
@@ -161,7 +161,8 @@ def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10):
     return count
 
 
-def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_end=2, v_ref=1e-7, area_ref=0.1):
+def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_end=2, knoise=0.00005, v_ref=1e-7,
+                        area_ref=0.1):
     """HH model with normalised input and parameters
     Args:
         percentage_of_stimulus(float): percentage of the reference stimulus given to the neuron
@@ -177,7 +178,7 @@ def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_
     """
     stimulus = v_ref * percentage_of_stimulus * (1 + delta_v)
     area_factor = area_ref * (1 + delta_area)
-    y_counts = HH_model(area_factor, stimulus, runs=runs, t_end=t_end)
+    y_counts = HH_model(area_factor, stimulus, runs=runs, t_end=t_end, knoise=knoise)
     normalized_count = y_counts / runs
     return normalized_count
 
@@ -188,10 +189,10 @@ def linear_model(x, delta_v, delta_area, *args):
     return y
 
 
-def mse_loss(parameters, model, x_ref, y_ref, runs=10, t_end=2, return_prediction=False):
+def mse_loss(parameters, model, x_ref, y_ref, runs=10, t_end=2, knoise=0.00005, return_prediction=False):
     """compute mean square error between the prediction of a model and the input data"""
     delta_v, delta_area = parameters
-    y_predicted = np.array([model(x, delta_v, delta_area, runs, t_end) for x in x_ref])
+    y_predicted = np.array([model(x, delta_v, delta_area, runs, t_end, knoise) for x in x_ref])
     mse = ((y_ref - y_predicted) ** 2).mean()
     logger.info("delta_v:{:.5e}, delta_area:{:.5e}, mse:{:.5f}".format(
         delta_v,

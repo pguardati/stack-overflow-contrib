@@ -51,20 +51,34 @@ def run(args):
         num=args.area_points,
         base=10
     )
-    param_combination = list(itertools.product(*[area_interval, voltage_interval]))
+    knoise_interval = np.logspace(
+        start=args.knoise_exp_start,
+        stop=args.knoise_exp_end,
+        num=args.knoise_points,
+        base=10
+    )
+    param_combination = list(itertools.product(*[area_interval, voltage_interval, knoise_interval]))
 
-    print("Evaluate simulation on {} combinations of input stimulus and surface area..".format(len(param_combination)))
+    print("Evaluate simulation on {} input parameters..".format(len(param_combination)))
     simulations = []
-    for i, (area_factor, stimulus) in enumerate(param_combination):
+    for i, (area_factor, stimulus, knoise) in enumerate(param_combination):
         try:
-            res = HH_model(area_factor, stimulus, return_seq=True, runs=args.runs, t_end=args.t_end)
+            res = HH_model(
+                area_factor,
+                stimulus,
+                return_seq=True,
+                runs=args.runs,
+                t_end=args.t_end,
+                knoise=knoise
+            )
         except:
-            print("simulation {} failed for area:{} and stimulus:{}".format(i, area_factor, stimulus))
+            print("simulation {} failed for area:{},  stimulus:{}, noise factor: {}".format(
+                i, area_factor, stimulus, knoise))
             res = None
         simulations.append(res)
 
     print("Create simulation datasets..")
-    df = pd.DataFrame(param_combination, columns=["area", "stimulus"])
+    df = pd.DataFrame(param_combination, columns=["area", "stimulus", "knoise"])
     # dataset to sum up simulation results
     df_summary = df.copy()
     df_summary["spikes"] = list(zip(*simulations))[0]
@@ -83,10 +97,14 @@ def run(args):
         df_sim.to_csv(path_sim, index=False)
 
     if args.store_plots:
-        fig = plot_spikes_vs_surfaces_and_stimuli(df_summary)
-        path_fig = os.path.join(LOG_DIR, dt.now().strftime('%Y-%m-%d--%H-%M-%S') + 'plot.png')
-        print("Store plot in {}".format(path_fig))
-        fig.savefig(path_fig)
+        for knoise in list(df['knoise'].unique()):
+            df_by_noise=df_summary[df_summary["knoise"]==knoise]
+            fig = plot_spikes_vs_surfaces_and_stimuli(df_by_noise)
+            plot_name = "{}_noise_{}_plot.png".format(dt.now().strftime('%Y-%m-%d--%H-%M-%S'), knoise)
+            path_fig = os.path.join(LOG_DIR, plot_name)
+            print("Store plot in {}".format(path_fig))
+            fig.savefig(path_fig)
+            plt.close('all')
 
 
 def parse_ars(args):
@@ -102,6 +120,12 @@ def parse_ars(args):
     parser.add_argument("--area-exp-start", default=-1, type=float,
                         help="order of magnitude of the minimum value of the area grid")
     parser.add_argument("--area-exp-end", default=-1, type=float,
+                        help="order of magnitude of the maximum value of the area grid")
+
+    parser.add_argument("--knoise-points", default=3, type=int, help="number of area values to explore")
+    parser.add_argument("--knoise-exp-start", default=-5, type=float,
+                        help="order of magnitude of the minimum value of the area grid")
+    parser.add_argument("--knoise-exp-end", default=-6, type=float,
                         help="order of magnitude of the maximum value of the area grid")
 
     parser.add_argument("--runs", default=10, type=int,
@@ -121,12 +145,16 @@ def main(args=None):
 
 if __name__ == "__main__":
     main([
-        "--voltage-points=100",
-        "--voltage-exp-star=-7.5",
-        "--voltage-exp-end=-6.5",
+        "--runs=10",
+        "--voltage-points=150",
+        "--voltage-exp-star=-7.2",
+        "--voltage-exp-end=-6.8",
         "--area-points=1",
         "--area-exp-start=-1",
         "--area-exp-end=-1",
+        "--knoise-points=2",
+        "--knoise-exp-start=-5",
+        "--knoise-exp-end=-6",
         "--store-results",
         "--store-plots"
     ])

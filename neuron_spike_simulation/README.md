@@ -71,8 +71,8 @@ Possible issues:
 - The simulation has been treated as a black box, the equations might be incorrect 
 
 TODO:  
-- add k_noise as a parameter in the grid search
-- add tqdm in grid search
+- refactor knoise name
+
 - add usage of multiplicative input for parameter optimization
 - add usage of decibel input
 - make optimization to converge starting from v=1e-7, a=0.1 and current k_noise

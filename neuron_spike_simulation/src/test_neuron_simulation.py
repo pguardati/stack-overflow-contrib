@@ -6,6 +6,7 @@ from scipy.optimize import minimize
 
 from neuron_spike_simulation.src.models import simulate_spike_dynamics, HH_model, hh_model_normalised, linear_model, \
     mse_loss
+from neuron_spike_simulation.scripts import run_grid_search_simulation
 
 SHOW_PLOT = False
 
@@ -115,6 +116,22 @@ class TestParameterOptimization(unittest.TestCase):
             options={"disp": True},
             bounds=((2, 2), (2, 2)),
         )
+
+    def test_grid_search(self):
+        run_grid_search_simulation.main([
+            "--runs=1",
+            "--voltage-points=10",
+            "--voltage-exp-star=-7.5",
+            "--voltage-exp-end=-6.5",
+            "--area-points=1",
+            "--area-exp-start=-1",
+            "--area-exp-end=-1",
+            "--knoise-points=5",
+            "--knoise-exp-start=-3",
+            "--knoise-exp-end=-7",
+            "--store-results",
+            "--store-plots"
+        ])
 
 
 if __name__ == "__main__":
