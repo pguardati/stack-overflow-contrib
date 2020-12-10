@@ -126,9 +126,9 @@ class TestParameterOptimization(unittest.TestCase):
             "--area-points=1",
             "--area-exp-start=-1",
             "--area-exp-end=-1",
-            "--knoise-points=5",
-            "--knoise-exp-start=-3",
-            "--knoise-exp-end=-7",
+            "--k-noise-points=5",
+            "--k-noise-exp-start=-3",
+            "--k-noise-exp-end=-7",
             "--store-results",
             "--store-plots"
         ])

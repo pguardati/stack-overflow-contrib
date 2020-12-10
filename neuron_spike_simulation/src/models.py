@@ -131,7 +131,7 @@ def simulate_spike_dynamics(
     return v
 
 
-def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10, knoise=0.00005):
+def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10, k_noise=0.00005):
     """Predict how many simulations predicted at least one spike
     Args:
         area_factor(float): multiplicative factor that determines the surface of the simulated neuron
@@ -139,7 +139,7 @@ def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10, knois
         runs(int): number of simulations
         return_seq(bool): if True, return the simulations that have been used to compute the spikes
         t_end(float): end of the simulation (s)
-        knoise(float): multiplicative constant of noise current amplitude(uA/(mS)^1/2)
+        k_noise(float): multiplicative constant of noise current amplitude(uA/(mS)^1/2)
 
     Returns:
         int|tuple=[int,np.array]
@@ -151,7 +151,7 @@ def HH_model(area_factor, stimulus, runs=1000, return_seq=False, t_end=10, knois
 
     simulations = []
     for _ in tqdm(range(0, runs), total=runs):
-        v = simulate_spike_dynamics(area_factor, stimulus, delay, dt, duration, t_end, knoise)
+        v = simulate_spike_dynamics(area_factor, stimulus, delay, dt, duration, t_end, k_noise)
         simulations.append(v)
         if max(v[:] - v_Rest) > 60:
             count += 1
@@ -178,7 +178,7 @@ def hh_model_normalised(percentage_of_stimulus, delta_v, delta_area, runs=10, t_
     """
     stimulus = v_ref * percentage_of_stimulus * (1 + delta_v)
     area_factor = area_ref * (1 + delta_area)
-    y_counts = HH_model(area_factor, stimulus, runs=runs, t_end=t_end, knoise=knoise)
+    y_counts = HH_model(area_factor, stimulus, runs=runs, t_end=t_end, k_noise=knoise)
     normalized_count = y_counts / runs
     return normalized_count
 
